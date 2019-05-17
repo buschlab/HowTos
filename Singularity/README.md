@@ -11,7 +11,8 @@
 
 ###### Build Errors
 
-```sudo singularity build ASE_neu.simg ASERecipe 
+```
+sudo singularity build ASE_neu.simg ASERecipe 
 
 Using container recipe deffile: ASERecipe
 Sanitizing environment
