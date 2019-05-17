@@ -1,0 +1,84 @@
+# Singularity Allele Specific Expression Pipeline
+# Michael Olbrich
+# michael.olbrich@uksh.de
+# May 2019
+
+Bootstrap: docker
+From: neurodebian:jessie
+ 
+%help
+    Container Pipits-Pipeline
+  
+    USAGE: ToDo
+ 
+%labels
+    Maintainer Michael Olbrich
+    Version v0.1
+ 
+%environment
+
+    PATH="/usr/local/anaconda/bin:$PATH"
+  
+## Define HOST-Directories
+%setup
+    # preparing directories
+    mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/data
+    # local directory for build-time files
+    mkdir $SINGULARITY_ROOTFS/local
+
+## Install Things&Stuff
+%post
+      # install debian packages
+    apt-get update
+    # upgrade?!
+    apt-get -y --allow-unauthenticated upgrade
+    apt-get install -y wget bzip2 \
+      ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 \
+      git git-annex-standalone
+    # install gcc compiler
+    apt-get install -y build-essential  
+    
+    apt-get clean
+
+    # install anaconda - current version at 14.05.19 from:
+    # https://repo.continuum.io/miniconda
+    if [ ! -d /usr/local/anaconda ]; then
+         wget https://repo.continuum.io/miniconda/Miniconda2-4.6.14-Linux-x86_64.sh \
+            -O ~/anaconda.sh && \
+         bash ~/anaconda.sh -b -p /usr/local/anaconda && \
+         rm ~/anaconda.sh
+    fi
+    # set anaconda path
+    export PATH="/usr/local/anaconda/bin:$PATH"
+    
+    # configure conda repositories
+	conda config --add channels defaults
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+
+    # install the bare minimum
+    conda install\
+      numpy scipy cython pandas pysam
+    conda clean --tarballs
+    
+    # INSTALL PIPITS 
+    # set-up environment
+    #conda create -n pipeline_env python=3.6
+    #conda activate pipeline_env
+    conda install pipits
+    
+    #conda create -n pipits_env --channel bioconda --channel conda-forge --channel defaults python=3.6 pipits
+    
+    conda create -n pipeline_env python=3.6
+    
+## Well.. you know
+%test
+  # Make sure that git was installed correctly
+  # Executing 'exit 1' causes the build process to fail, so the half-built container gets removed.
+  
+%runscript
+#    echo "Now inside Singularity container woah..."
+    exec /bin/bash
+    conda activate pipeline_env
+

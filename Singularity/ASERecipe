@@ -1,0 +1,109 @@
+# Singularity Allele Specific Expression Pipeline
+# Michael Olbrich
+# michael.olbrich@uksh.de
+# May 2019
+
+Bootstrap:docker
+From:neurodebian:jessie
+ 
+%help
+    Container for ASE-Computation-Pipeline
+  
+    USAGE: ToDo
+ 
+%labels
+    Maintainer Michael Olbrich
+    Version v0.1
+ 
+%environment
+    PATH="/usr/local/anaconda/bin:$PATH"
+    PATH="/local/phaser/phaser:$PATH"
+    PATH="/local/phaser/phaser_gene_ae:$PATH"
+    PATH="/local/phaser/phaser_annotate:$PATH"
+  
+## Define HOST-Directories
+%setup
+    # preparing directories
+    mkdir $SINGULARITY_ROOTFS/scratch
+    mkdir $SINGULARITY_ROOTFS/data
+    # local directory for build-time files
+    mkdir $SINGULARITY_ROOTFS/local
+
+## Install Things&Stuff
+%post
+      # install debian packages
+    apt-get update
+    # upgrade?!
+    apt-get -y --allow-unauthenticated upgrade
+    apt-get install -y wget bzip2 \
+      ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 \
+      git git-annex-standalone
+    # install gcc compiler
+    apt-get install -y build-essential  
+    
+    apt-get clean
+
+    # install anaconda
+    if [ ! -d /usr/local/anaconda ]; then
+         wget https://repo.continuum.io/miniconda/Miniconda2-4.3.14-Linux-x86_64.sh \
+            -O ~/anaconda.sh && \
+         bash ~/anaconda.sh -b -p /usr/local/anaconda && \
+         rm ~/anaconda.sh
+    fi
+    # set anaconda path
+    export PATH="/usr/local/anaconda/bin:$PATH"
+
+    # configure conda repositories
+	conda config --add channels defaults
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+	
+    # install the dependencies for phASER
+    conda install\
+      numpy scipy cython pandas pysam intervaltree vcftools
+	  
+    # install remaining pipeline-packages
+    # separated for lucidity - version selection for reproducibility 
+    conda install -c bioconda samtools=1.9
+    conda install -c bioconda bamtools=2.5.1
+    conda install -c bioconda star=2.7.0f
+    
+    # remove downloaded archives
+    conda clean --tarballs
+    
+    # install phaser
+    git clone https://github.com/secastel/phaser.git
+    # change py-HEADER to #!/usr/bin/env python2 to conform with singularity usage
+    sed -i '1c#!/usr/bin/env python2' phaser/phaser/phaser.py
+    sed -i '1c#!/usr/bin/env python2' phaser/phaser_gene_ae/phaser_gene_ae.py
+    sed -i '1c#!/usr/bin/env python2' phaser/phaser_annotate/phaser_annotate.py
+    # set files to executable
+    chmod -R 755 phaser/
+    # continue normal installation routine
+    cd phaser/phaser/
+    python setup.py build_ext --inplace
+    cd ../../
+    mv phaser /local/phaser
+    ### DEBUG ###
+    echo "base dir is:"
+    ls -alh /local
+    echo "whats in the phaser dir"
+    ls -alh /local/phaser
+    ### DEBUG ###
+    
+    # set-up environment for samtools
+    conda create -n pipeline_env 
+
+    # make /data and /scripts so we can mount it to access external resources
+    #if [ ! -d /data ]; then mkdir /data; fi
+    #if [ ! -d /scripts ]; then mkdir /scripts; fi
+
+## Well.. you know
+%test
+  # Make sure that git was installed correctly
+  # Executing 'exit 1' causes the build process to fail, so the half-built container gets removed.
+  
+%runscript
+    echo "Now inside Singularity container woah..."
+    exec /bin/bash
+    conda activate pipits_env
