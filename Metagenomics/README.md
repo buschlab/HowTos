@@ -10,15 +10,14 @@
    
 
 ## Kaiju
-0. Prerequisits
-1. Use kneaddata to map against host and remove matching sequences
-2. download database for kaiju
-3. run kaiju
-4. use kaiju workflow to construct krona files for nice but essentially useless visualization
-5. summarize kaiju output - import to R - map to NCBI taxonomy classification - construct 
-phyloseq object and run standard analyses
+0. [Prerequisites](#0.-prerequisites)
+1. [Pre-Processing](#1.-pre-processing)
+2. Kaiju databases
+3. Run kaiju
+4. Downstream - Krona
+5. Downstream - R
 
-#### 0. Requirements to be able to run this Workflow
+#### 0. Prerequisites
 
 This Workflow consists of 3 main steps.
 
@@ -28,7 +27,9 @@ This Workflow consists of 3 main steps.
 
 To that end you'll need to install [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home), [Kaiju](https://github.com/bioinformatics-centre/kaiju) and [R](https://www.r-project.org), as well as their respective requirements and additional packages.
 
-#### 1. Before running Kaiju the input-files have to be pre-processed and sanitised, i.e., perform quality control and remove all unwanted reads by mapping against the host organism. The tool for this job is 
+#### 1. Pre-processing
+
+Before running Kaiju the input-files have to be pre-processed and sanitised, i.e., perform quality control and remove all unwanted reads by mapping against the host organism. The tool for this job is 
 [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home).
 
 - multiple databases can be used by adding the `-db` flag and specifying additional paths
@@ -59,7 +60,7 @@ bash 01_kneaddata_PER.sh
 
 ```
 
-#### 2. Select and download database.
+#### [2. Kaiju databases](#kaiju-two)
 
 Several databases are available, incorporating data from bacterial to viral genomes. Refer to [Kaiju tutorial](https://github.com/bioinformatics-centre/kaiju) for an overview of DBs and content.vIn this case we chose the NCBI BLASTplus DB as is it is the most comprehensive. The DB can found and downloaded directly on the developers [website](http://kaiju.binf.ku.dk/server) or downloaded via the programs `kaiju-makedb` command.
 
@@ -71,7 +72,7 @@ kaiju-makedb -s nr_euk
 
 ```
 
-#### 3. Run Kaiju
+#### [3. Run Kaiju](#kaiju-three)
 
 Kaiju requires `nodes.dmp`and `kaiju_db.fmi` as well as the pre-processed input file.
 
@@ -98,7 +99,7 @@ bash PtD_classifier_blast.sh
 ```
 
 
-#### 4. Downstream analysis using Krona
+#### [4. Downstream - Krona](#kaiju-four)
 
 The Kaiju output can be converted to a format fitting the requirements of Krona, as described in 
 [Kaiju github source](https://github.com/bioinformatics-centre/kaiju). And then imported into [Krona](https://github.com/marbl/Krona/wiki).
@@ -110,7 +111,7 @@ kaiju2krona -t nodes.dmp -n names.dmp -i kaiju.out -o kaiju.out.krona
 ```
 
 
-#### 5. Import and analyse in R
+#### [5. Downstream - R](#kaiju-five)
 
 First the output-files have to be summarised and combined with a complete taxonomic classification
 
