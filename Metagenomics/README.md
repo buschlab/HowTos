@@ -251,8 +251,8 @@ saveRDS(physeq, file=paste0(FILESOURCE,"rds/phyloseq_kaiju_blastp.rds"), compres
 0. [Prerequisites](#humann2zero)
 1. [Prepare DBs](#humann2one)
 2. [Run pipeline](#humann2two)
-3. handle the three given filetypes
-4. magic
+3. [Output](#humann2three)
+4. [Downstream - R](#humann2four)
 
 
 
@@ -265,7 +265,7 @@ Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) basically is a comple
 Technically, no pre-processing of the input files is required. I recommend to do it anyway, because:
 1. If you intend to use other tools, such as Kaiju, you'll need to do it anyway
 2. For my taste it's more dependable and format errors are easier to identify/fix than after a failed pipeline run.
-3. Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) makes practical use of paired-end read information, it is recommended/required to concatenate both files into a single one. So you'll have to do some work in any case.
+3. Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) makes no practical use of paired-end read information, it is recommended/required to concatenate both files into a single one. So you'll have to do some work in any case.
 
 
 
@@ -286,7 +286,7 @@ humann2_databases --download uniref uniref90_diamond $INSTALL_LOCATION
 ```
 
 
-#### <a name="humann2two"></a> 1. Run pipeline
+#### <a name="humann2two"></a> 2. Run pipeline
 
 When all the requirements are satisfied and the appropriate DBs have been selected, it is time to run the pipeline. This is very easy, as you can see in the following comand. One note would be to supply the paths to `--metaphlan`, `--bowtie2` and `--diamond` manually. At least on an OMICS-cluster system the execution was more reliable that way.
 
@@ -298,6 +298,24 @@ ls *.fastq.gz | sed 's/_/ /g' | awk -v threads=$THREADS -v scratch=$SCRATCH '{pr
 bash start_humann2.sh
 
 ```
+
+#### <a name="humann2three"></a> 3. Output
+
+The pipeline creates 3 main output files.
+1. ID_genefamilies.tsv - Gene families are groups of evolutionarily-related protein-coding sequences that often perform similar functions.
+2. ID_pathabundance.tsv - The abundance of each pathway in the community as a function of the abundances of the pathway's component reactions, with each reaction's abundance computed as the sum over abundances of genes catalyzing the reaction.
+3. ID_pathcoverage.tsv - Assigns a confidence score (I=[0,1]) to pathways and associated reactions. So it's more of a qualitytive measure for the detected pathways.
+
+Those files can for example be used with the provided functions for downstream analyses. Next to those files, the pipeline also creates outputs for intermediate steps. Those can be used for downstream analyses as well as re-runs of parts of the pipeline. 
+
+For information on integrated downstream analyses and intermediate output-files, please refer to the [Manual](https://github.com/biobakery/humann#initial-installation).
+
+
+#### <a name="humann2four"></a> 4. Downstream - R
+
+info here
+
+
 
 
 
