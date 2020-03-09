@@ -1,6 +1,6 @@
 # How to process and analyse Metagenomics
 
-## Sections:
+### Sections:
 1. ### Kaiju
    Fast and sensitive taxonomic classification for metagenomics
 2. ### Humann2 
@@ -9,7 +9,7 @@
    to describe the metabolic potential of a microbial community and its members.
    
 
-### Kaiju
+## Kaiju
 0. Prerequisits
 1. Use kneaddata to map against host and remove matching sequences
 2. download database for kaiju
@@ -220,7 +220,7 @@ saveRDS(physeq, file=paste0(FILESOURCE,"rds/phyloseq_kaiju_blastp.rds"), compres
 
 ```
 
-### Humann2 
+## Humann2 
 1. install which is tricky
 2. run pipeline
 3. handle the three given filetypes
