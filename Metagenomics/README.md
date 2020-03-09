@@ -1,21 +1,21 @@
 # <a name="startofpage"></a> How to process and analyse Metagenomics
 
 ### Sections:
-1. ### Kaiju
+1. ### [Kaiju](#kaijumain)
    Fast and sensitive taxonomic classification for metagenomics
-2. ### Humann2 
+2. ### [Humann2](#humann2main) 
    HUMAnN is a pipeline for efficient and accurate functional profiling of microbial 
    pathways in a community from metagenomic or metatranscriptomic sequencing data, aimed 
    to describe the metabolic potential of a microbial community and its members.
    
 
-## Kaiju
-0. [Prerequisites](#kaijuero)
+## <a name="kaijumain"></a> Kaiju
+0. [Prerequisites](#kaijuzero)
 1. [Pre-Processing](#kaijuone)
-2. Kaiju databases
-3. Run kaiju
-4. Downstream - Krona
-5. Downstream - R
+2. [Kaiju databases](#kaijutwo)
+3. [Run kaiju](#kaijuthree)
+4. [Downstream - Krona](#kaijutfour)
+5. [Downstream - R](#kaijufive)
 
 #### <a name="kaijuzero"></a> 0. Prerequisites 
 
@@ -96,6 +96,34 @@ ls *paired_1.sorted.fq.gz | sed 's/_/ /g' | awk -v threads=$THREADS -v nodes=$NO
 bash PtD_classifier_blast.sh
 
 ```
+
+###### Supplementary
+
+Sometimes the raw-data comes with weird header, wrong linebreak symbols or any number of formating issues that exacerbate the work.
+
+An issue with Kaiju are the format of sequence identifiers in paired-end files and the oder of reads in both files. Luckily, the tool-kit [SeqKit](https://bioinf.shenwei.me/seqkit/) can help with all sorts of formatting and sorting issues. The following code checks seq-identifiers, sort and filters paired-end reads to prepare them for Kaiju.
+
+```bash
+
+### 1. sort & remove duplicates 
+ls *.fastq | sed 's/\./ /g' | awk '{print "seqkit rmdup "$1"."$2"."$3" | seqkit replace --pattern \" .+\" --replacement \" 1\" | seqkit sample --proportion 0.9 --rand-seed 1 --out-file "$1".reads.fq.gz"}' > sortNremove.sh
+bash sortNremove.sh
+
+### 2. extract intersecting reads
+ls *1.reads.fq.gz | sed 's/_/ /g' | awk '{print "seqkit --name --only-id "$1"_"$2"_"$3"_"$4"_"$5" "$1"_"$2"_"$3"_"$4"_2.reads.fq.gz | sort | uniq -d > "$1".txt"}' > uniqueReads.sh
+bash uniqueReads.sh
+
+### 3. extract matching reads to create new files
+ls *.reads.fq.gz | sed 's/_/ /g' | awk '{print "seqkit grep --pattern-file "$1".txt "$1"_"$2"_"$3"_"$4"_"$5" -o "$1"_unique_"$4"_"$5}' > printReads.sh
+bash printReads.sh
+
+### 4. sort both files aaaand you're done
+ls *_unique_* | sed 's/\./ /g' | awk '{print "gzip -d -c "$1"."$2".fq.gz | seqkit fx2tab | sort -k1,1 -T . | seqkit tab2fx | gzip -c > "$1".sorted.fq.gz"}' > finalSort.sh
+bash finalSort.sh
+
+
+```
+
 
 
 #### <a name="kaijufour"></a> 4. Downstream - Krona
@@ -217,10 +245,9 @@ names(metadata)[1] <- "Group"
 phyloseq::sample_data(physeq) <- metadata
 saveRDS(physeq, file=paste0(FILESOURCE,"rds/phyloseq_kaiju_blastp.rds"), compress = TRUE)
 
-
 ```
 
-## Humann2 
+## <a name="humann2main"></a> Humann2 
 1. install which is tricky
 2. run pipeline
 3. handle the three given filetypes
