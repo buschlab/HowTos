@@ -10,14 +10,14 @@
    
 
 ## Kaiju
-0. [Prerequisites](#0.-prerequisites)
-1. [Pre-Processing](#1.-pre-processing)
+0. [Prerequisites](#kaijuZero)
+1. [Pre-Processing](#kaijuOne)
 2. Kaiju databases
 3. Run kaiju
 4. Downstream - Krona
 5. Downstream - R
 
-#### 0. Prerequisites
+#### 0. Prerequisites {#kaijuZero}
 
 This Workflow consists of 3 main steps.
 
@@ -27,7 +27,7 @@ This Workflow consists of 3 main steps.
 
 To that end you'll need to install [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home), [Kaiju](https://github.com/bioinformatics-centre/kaiju) and [R](https://www.r-project.org), as well as their respective requirements and additional packages.
 
-#### 1. Pre-processing
+#### 1. Pre-processing {#kaijuOne}
 
 Before running Kaiju the input-files have to be pre-processed and sanitised, i.e., perform quality control and remove all unwanted reads by mapping against the host organism. The tool for this job is 
 [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home).
