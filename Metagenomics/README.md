@@ -248,12 +248,59 @@ saveRDS(physeq, file=paste0(FILESOURCE,"rds/phyloseq_kaiju_blastp.rds"), compres
 ```
 
 ## <a name="humann2main"></a> Humann2 
-1. install which is tricky
-2. run pipeline
+0. [Prerequisites](#humann2zero)
+1. [Prepare DBs](#humann2one)
+2. [Run pipeline](#humann2two)
 3. handle the three given filetypes
 4. magic
+
+
+
+#### <a name="humann2zero"></a> 0. Prerequisites 
+
+[HUMAnN2](http://huttenhower.sph.harvard.edu/humann) is a pipeline for efficiently and accurately profiling the presence/absence and abundance of microbial pathways in a community from metagenomic or metatranscriptomic sequencing data.
    
-   
+Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) basically is a complete workflow for metagenomic-data, it incorporates a variety of tools and libraries. The probably easiest way to install is via pip, because it takes care of most dependencies ([Bowtie](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and [Diamond](https://diamond.readthedocs.io/en/latest/)) assuming that the correct flags have been set during installation. [MetaPhlAn2](http://huttenhower.sph.harvard.edu/metaphlan2) still has to be installed seperately. After Installation it is advisable to execute the provided test-scripts `humann2_test --run-functional-tests-tools` in order to ensure functionality of the pipeline. Please refer to the [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) website to find detailed instructions.
+
+Technically, no pre-processing of the input files is required. I recommend to do it anyway, because:
+1. If you intend to use other tools, such as Kaiju, you'll need to do it anyway
+2. For my taste it's more dependable and format errors are easier to identify/fix than after a failed pipeline run.
+3. Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) makes practical use of paired-end read information, it is recommended/required to concatenate both files into a single one. So you'll have to do some work in any case.
+
+
+
+#### <a name="humann2one"></a> 1. Prepare DBs
+
+[HUMAnN2](http://huttenhower.sph.harvard.edu/humann) requires both a nucleotide and and protein database to work properly. In this case we used ChocoPhlAn and UniRef90 DBs.
+
+The provided function `humann2_databases` downloads the databases and adjusts the internal pathways of the humann2 framework. However, in case Cluster restrictions prevent you from using the work-directory for execution - or you want to download and check out, you can provide the DB-location on execution. The flags `--nucleotide-database` and `--protein-database` require the path to the respective DBs.
+
+```bash
+
+## Download nucleotide DB
+humann2_databases --download chocophlan full $INSTALL_LOCATION
+
+## Download protein DB - uniref90_diamond is the most comprehensive and thus largest DB
+humann2_databases --download uniref uniref90_diamond $INSTALL_LOCATION
+
+```
+
+
+#### <a name="humann2two"></a> 1. Run pipeline
+
+When all the requirements are satisfied and the appropriate DBs have been selected, it is time to run the pipeline. This is very easy, as you can see in the following comand. One note would be to supply the paths to `--metaphlan`, `--bowtie2` and `--diamond` manually. At least on an OMICS-cluster system the execution was more reliable that way.
+
+```bash
+
+## List files and prepare execution script.
+ls *.fastq.gz | sed 's/_/ /g' | awk -v threads=$THREADS -v scratch=$SCRATCH '{print "humann2 --metaphlan /path/to/metaphlan2/ --diamond /path/to/diamond/ --bowtie2 /path/to/bowtie2/  --input "$1"_"$2"_"$3"_"$4" --output ../results/"$1" --threads "threads" --nucleotide-database /db/humanndb/chocophlan --protein-database /db/humanndb/uniref"}' > start_humann2.sh
+## execute
+bash start_humann2.sh
+
+```
+
+
+
 
 
 ###### Take me back to the [beginning](#startofpage)
