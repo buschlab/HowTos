@@ -1,5 +1,7 @@
 # How to process and analyse Metagenomics
 
+Take me to [pookie](#pookie)
+
 ### Sections:
 1. ### Kaiju
    Fast and sensitive taxonomic classification for metagenomics
@@ -27,7 +29,7 @@ This Workflow consists of 3 main steps.
 
 To that end you'll need to install [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home), [Kaiju](https://github.com/bioinformatics-centre/kaiju) and [R](https://www.r-project.org), as well as their respective requirements and additional packages.
 
-#### 1. Pre-processing ### {#kaijuOne}
+#### 1. Pre-processing {#kaijuOne}
 
 Before running Kaiju the input-files have to be pre-processed and sanitised, i.e., perform quality control and remove all unwanted reads by mapping against the host organism. The tool for this job is 
 [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home).
@@ -228,4 +230,5 @@ saveRDS(physeq, file=paste0(FILESOURCE,"rds/phyloseq_kaiju_blastp.rds"), compres
 4. magic
    
    
+### <a name="pookie"></a>This is the Heading
 
