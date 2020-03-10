@@ -25,7 +25,7 @@ This Workflow consists of 3 main steps.
 2. ##### running Kaiju (Protein-to-DNA classifier)
 3. ##### Import into R for further processing
 
-To that end you'll need to install [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home), [Kaiju](https://github.com/bioinformatics-centre/kaiju) and [R](https://www.r-project.org), as well as their respective requirements and additional packages.
+To that end you'll need to install [KneadData](https://bitbucket.org/biobakery/kneaddata/wiki/Home), [Kaiju](https://github.com/bioinformatics-centre/kaiju) and [R](https://www.r-project.org), as well as their respective requirements and additional packages. An alternative is to use the [Docker image](https://hub.docker.com/r/nanozoo/kaiju) of Kaiju.
 
 #### <a name="kaijuone"></a> 1. Pre-processing
 Before running Kaiju the input-files have to be pre-processed and sanitised, i.e., perform quality control and remove all unwanted reads by mapping against the host organism. The tool for this job is 
@@ -273,6 +273,8 @@ Since [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) basically is a comple
 pip install humann2 --user --install-option='--build-diamond' --install-option='--replace-dependencies-install'
 
 ```
+
+An alternative is to use the [Docker image](https://hub.docker.com/r/biobakery/humann2) of HUMAnN2.
 
 [MetaPhlAn2](http://huttenhower.sph.harvard.edu/metaphlan2) still has to be installed seperately. After Installation it is advisable to execute the provided test-scripts `humann2_test --run-functional-tests-tools` in order to ensure functionality of the pipeline. Please refer to the [HUMAnN2](http://huttenhower.sph.harvard.edu/humann) website to find detailed instructions.
 
