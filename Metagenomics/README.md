@@ -330,6 +330,8 @@ For information on integrated downstream analyses and intermediate output-files,
 
 The following transformations are helpful for downstream analyses and facilitate the import to R. 
 
+##### Preparation I
+
 ```bash
 
 ## Regroup genes to functional categories, i.e., all the reads that are associated to one gene/protein are grouped together - resulting in a total count for the gene/protein and the respective sub-classifications into single species (if possible)
