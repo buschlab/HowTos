@@ -378,7 +378,7 @@ sed 's/_unique_paired_concat_Abundance//g' MG_pathabundance_relab.tsv > MG_Adina
 # copies per million
 sed 's/_unique_paired_concat_Abundance//g' MG_pathabundance_cpm.tsv > MG_pathabundance_cpm_fixedID.tsv
 
-```bash
+```
 
 ##### Import
 And finally the import and re-format operations for processing in R.
