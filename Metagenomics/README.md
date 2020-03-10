@@ -328,10 +328,9 @@ For information on integrated downstream analyses and intermediate output-files,
 
 #### <a name="humann2four"></a> 4. Downstream - R
 
-##### Preparation I
 The following transformations are helpful for downstream analyses and facilitate the import to R. 
 
-´´´bash
+```bash
 
 ## Regroup genes to functional categories, i.e., all the reads that are associated to one gene/protein are grouped together - resulting in a total count for the gene/protein and the respective sub-classifications into single species (if possible)
 # This step can be omitted, but it beats comming up with a personal strategy for aggregation of functional groupings.
