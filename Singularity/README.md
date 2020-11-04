@@ -1,3 +1,7 @@
+# Setup Singularity on your machine
+
+For installing Singularity on Debian based systems like Debian, Ubuntu or Mint you can use this [setup file](https://github.com/buschlab/HowTos/blob/master/Singularity/setupSingularity.sh).
+
 # Recipes for OMICS Singularity Containers
 
 ### List of available recipes
