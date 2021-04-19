@@ -1,0 +1,57 @@
+Bootstrap: library
+From: kyle/alpine/alpine:v3.13.5
+
+%post
+
+  # cnvkit
+  export VERSION=v0.9.8
+  
+  # install R python3 and git
+  apk update
+  apk add R R-dev python3 py3-pip py3-wheel py3-numpy py3-scipy py3-pandas py3-matplotlib py3-reportlab git build-base gfortran
+  
+  # install R dependencies
+  Rscript -e "source('http://callr.org/install#DNAcopy')"
+  
+  # install python dependencies
+  pip3 install biopython pyfaidx pysam pyvcf
+  
+  # install cnvkit
+  cd /opt
+  git clone https://github.com/etal/cnvkit /opt/cnvkit
+  cd /opt/cnvkit/
+  git checkout $VERSION
+  pip3 install -e .
+  
+  # link python3 to run via python command
+  ln -s $(which python3) /usr/bin/python
+  
+  # cleanup
+  apk del R-dev py3-pip py3-wheel git gfortran
+  rm -rf /var/cache/apk/*
+
+%runscript
+
+  # start cnvkit with passed arguments
+  python3 /opt/cnvkit/cnvkit.py "$@"
+
+%labels
+
+  Author n.reimer@uni-luebeck.de
+  Version 1.0
+
+%help
+
+  CNVkit singularity image
+  
+  Base system: Alpine linux
+  Install path: /opt/cnvkit
+  
+  How to use:
+    a) singularity run cnvkit.sif <YourArguments>
+    b) singularity exec cnvkit.sif /opt/cnvkit/cnvkit.py <YourArguments>
+    
+  CNVkit help:
+    singularity run cnvkit.sif --help
+    
+  For more details on CNVkit see https://cnvkit.readthedocs.io/en/stable/.
