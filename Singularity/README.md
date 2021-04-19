@@ -6,10 +6,11 @@ For installing Singularity on Debian based systems like Debian, Ubuntu or Mint y
 
 ### List of available recipes
 
-1. ASERecipe
+1. [ASERecipe](https://github.com/buschlab/HowTos/blob/master/Singularity/ASERecipe)
    Contains all Tools required for allele specific expression pipeline from *fastqc* to *phASER*.
-2. PipitsRecipe
+2. [PipitsRecipe](https://github.com/buschlab/HowTos/blob/master/Singularity/PipitsRecipe)
    Container for Pipits pipeline. 
+3. [CNVkit](https://github.com/buschlab/HowTos/blob/master/Singularity/cnvkit.def) Contains *CNVkit* for copy number analysis.
 
 ### Pointers
 
