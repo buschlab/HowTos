@@ -11,6 +11,7 @@ For installing Singularity on Debian based systems like Debian, Ubuntu or Mint y
 2. [PipitsRecipe](https://github.com/buschlab/HowTos/blob/master/Singularity/PipitsRecipe)
    Container for Pipits pipeline. 
 3. [CNVkit](https://github.com/buschlab/HowTos/blob/master/Singularity/cnvkit.def) Contains *CNVkit* for copy number analysis.
+4. [BamSnap](https://github.com/buschlab/HowTos/blob/master/Singularity/bamsnap.def) Contains *BamSnap*, a visualization tool for BAM files.
 
 ### Pointers
 

@@ -1,0 +1,54 @@
+Bootstrap: library
+From: kyle/alpine/alpine:v3.14.2
+
+%post
+
+  # bamsnap
+  export VERSION=0.2.19
+  
+  # install python3 and git
+  apk update
+  apk add python3 python3-dev py3-pip py3-wheel py3-setuptools git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg jpeg-dev
+  
+  # install python dependencies
+  pip3 install pyfaidx pysam Pillow pytabix
+  
+  # install BamSnap
+  cd /opt
+  git clone https://github.com/parklab/bamsnap.git /opt/bamsnap
+  cd /opt/bamsnap/
+  git checkout $VERSION
+  pip3 install -e .
+  
+  # link python3 to run via python command
+  ln -s $(which python3) /usr/bin/python
+  
+  # cleanup
+  apk del python3-dev py3-pip py3-wheel git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg-dev
+  rm -rf /var/cache/apk/*
+
+%runscript
+
+  # start BamSnap with passed arguments
+  /usr/bin/bamsnap "$@"
+
+%labels
+
+  Author n.reimer@uni-luebeck.de
+  Version 1.0
+
+%help
+
+  BamSnap singularity image
+  
+  Base system: Alpine linux
+  Install path: /opt/bamsnap
+  
+  How to use:
+    a) singularity run bamsnap.sif <YourArguments>
+    b) singularity exec bamsnap.sif bamsnap <YourArguments>
+    
+  BamSnap help:
+    singularity run bamsnap.sif -h
+    
+  For more details on BamSnap see https://bamsnap.readthedocs.io/en/stable/.
