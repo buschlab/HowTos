@@ -8,7 +8,7 @@ From: kyle/alpine/alpine:v3.14.2
   
   # install python3 and git
   apk update
-  apk add python3 python3-dev py3-pip py3-wheel py3-setuptools git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg jpeg-dev
+  apk add python3 python3-dev py3-pip py3-wheel py3-setuptools git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg jpeg-dev freetype freetype-dev
   
   # install python dependencies
   pip3 install pyfaidx pysam Pillow pytabix
@@ -24,7 +24,7 @@ From: kyle/alpine/alpine:v3.14.2
   ln -s $(which python3) /usr/bin/python
   
   # cleanup
-  apk del python3-dev py3-pip py3-wheel git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg-dev
+  apk del python3-dev py3-pip py3-wheel git cython gcc make g++ zlib-dev bzip2-dev xz-dev jpeg-dev freetype-dev
   rm -rf /var/cache/apk/*
 
 %runscript
